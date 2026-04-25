@@ -30,7 +30,7 @@ build/
 .Python
 
 # ── PyInstaller build output ──────────────────────────────────────────────────
-*.spec
+# Note: *.spec files ARE tracked (needed for builds)
 _internal/
 *.exe
 
