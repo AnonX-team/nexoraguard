@@ -15,6 +15,7 @@ from pydantic import BaseModel
 import os, sys
 
 import auth as _auth
+import endpoints_manager as _ep
 
 from log_collector import collect_all_logs
 from system_monitor import (
@@ -150,7 +151,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 
 # ── Auth Middleware ────────────────────────────────────────────────────────────
-_PUBLIC_PATHS = {"/auth/login", "/favicon.ico", "/ui"}
+_PUBLIC_PATHS = {"/auth/login", "/favicon.ico", "/ui", "/endpoints/report"}
 
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
@@ -219,6 +220,48 @@ def route_me(request: Request):
     token = request.headers.get("Authorization", "")[7:]
     username = _auth.verify_token(token)
     return _auth.get_user_info(username)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ENDPOINTS (Multi-Machine Support)
+# ══════════════════════════════════════════════════════════════════════════════
+@app.post("/endpoints/report")
+def endpoint_report(data: dict, request: Request):
+    """Remote agent POSTs its snapshot here. No JWT needed — uses Agent Key."""
+    agent_key = request.headers.get("X-Agent-Key", "")
+    if agent_key != _ep.AGENT_SECRET:
+        raise HTTPException(status_code=403, detail="Invalid agent key")
+    agent_id = request.headers.get("X-Agent-ID", data.get("hostname", "unknown"))
+    _ep.update_endpoint(agent_id, data)
+    return {"status": "ok", "endpoint_id": agent_id}
+
+@app.get("/endpoints")
+def list_endpoints():
+    """Return all connected endpoints with status."""
+    return {
+        "endpoints": _ep.get_all_endpoints(),
+        "summary":   _ep.get_summary(),
+    }
+
+@app.get("/endpoints/summary")
+def endpoints_summary():
+    return _ep.get_summary()
+
+@app.get("/endpoints/{endpoint_id}")
+def get_endpoint(endpoint_id: str):
+    ep = _ep.get_endpoint(endpoint_id)
+    if not ep:
+        raise HTTPException(status_code=404, detail="Endpoint not found")
+    return ep
+
+@app.get("/endpoints/{endpoint_id}/alerts")
+def get_endpoint_alerts(endpoint_id: str):
+    return {"alerts": _ep.get_endpoint_alerts(endpoint_id)}
+
+@app.delete("/endpoints/{endpoint_id}")
+def remove_endpoint(endpoint_id: str):
+    _ep.remove_endpoint(endpoint_id)
+    return {"status": "removed"}
 
 
 # Serve dashboard + icon — works both in dev and EXE

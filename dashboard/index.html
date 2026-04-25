@@ -888,6 +888,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);display:flex
   </div>
 
   <div class="nav-section">
+    <div class="nav-label">Infrastructure</div>
+    <div class="nav-item" onclick="goto('endpoints',this)">
+      <span class="nav-icon">🖥</span> Endpoints
+      <span class="nav-badge" id="ep-nav-badge" style="display:none;background:var(--red)">0</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
     <div class="nav-label">XDR Platform</div>
     <div class="nav-item" onclick="goto('xdr',this)">
       <span class="nav-icon">⬡</span> XDR Incidents
@@ -2432,6 +2440,71 @@ What would you like to investigate?</div>
 
     </div>
 
+    <!-- ── ENDPOINTS PAGE ───────────────────────────────────────────────────── -->
+    <div id="page-endpoints" class="tab-page">
+
+      <!-- Summary KPIs -->
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi">
+          <div class="kpi-glow" style="background:var(--accent)"></div>
+          <div class="kpi-top"><div class="kpi-icon">🖥</div><span class="kpi-label">Total Endpoints</span></div>
+          <div class="kpi-value" id="ep-total">0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-glow" style="background:var(--green)"></div>
+          <div class="kpi-top"><div class="kpi-icon" style="background:var(--green-glow)">🟢</div><span class="kpi-label">Online</span></div>
+          <div class="kpi-value" id="ep-online" style="color:var(--green)">0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-glow" style="background:var(--red)"></div>
+          <div class="kpi-top"><div class="kpi-icon" style="background:var(--red-glow)">🔴</div><span class="kpi-label">Offline</span></div>
+          <div class="kpi-value" id="ep-offline" style="color:var(--text3)">0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-glow" style="background:var(--red)"></div>
+          <div class="kpi-top"><div class="kpi-icon" style="background:var(--red-glow)">⚠</div><span class="kpi-label">Total Alerts</span></div>
+          <div class="kpi-value" id="ep-alerts" style="color:var(--red)">0</div>
+        </div>
+      </div>
+
+      <!-- Setup Instructions (shown when no endpoints) -->
+      <div id="ep-setup-card" class="card" style="text-align:center;padding:40px">
+        <div style="font-size:48px;margin-bottom:16px">🖥</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">No Endpoints Connected</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7">
+          To monitor other machines, run the NexoraGuard agent on them. The agent will automatically connect to this dashboard.
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:left;max-width:560px;margin:0 auto">
+          <div style="font-size:11px;color:var(--accent);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">Setup Instructions</div>
+          <div style="font-size:13px;color:var(--text2);line-height:2">
+            <b style="color:var(--text)">Step 1</b> — Copy <code style="background:var(--surface3);padding:2px 7px;border-radius:4px;color:var(--accent)">backend/agent_client.py</code> to the target machine<br>
+            <b style="color:var(--text)">Step 2</b> — Edit the file: set <code style="background:var(--surface3);padding:2px 7px;border-radius:4px;color:var(--accent)">SERVER_URL</code> to this machine's IP<br>
+            <b style="color:var(--text)">Step 3</b> — Run: <code style="background:var(--surface3);padding:2px 7px;border-radius:4px;color:var(--accent)">python agent_client.py</code><br>
+            <b style="color:var(--text)">Step 4</b> — Machine appears here within 15 seconds
+          </div>
+          <div style="margin-top:14px;padding:10px 14px;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);border-radius:8px;font-size:12px;color:var(--accent)">
+            Your Server IP: <strong id="ep-server-ip" style="font-family:var(--mono)">loading...</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Endpoints Grid (shown when endpoints exist) -->
+      <div id="ep-grid" style="display:none;margin-top:20px">
+        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:14px">Connected Machines</div>
+        <div id="ep-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px"></div>
+      </div>
+
+      <!-- Selected Endpoint Detail -->
+      <div id="ep-detail" class="card" style="display:none;margin-top:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="font-size:15px;font-weight:700" id="ep-detail-title">Endpoint Detail</div>
+          <button onclick="closeEpDetail()" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:5px 12px;cursor:pointer;font-size:12px">Close</button>
+        </div>
+        <div id="ep-detail-body"></div>
+      </div>
+
+    </div>
+
     <!-- ── UEBA PAGE ──────────────────────────────────────────────────────── -->
     <div id="page-ueba" class="tab-page">
 
@@ -3532,6 +3605,7 @@ function goto(page, el) {
     attackgraph:'Attack Graph & Timeline',
     usb:        'USB & Removable Device Monitor',
     mitre:      'MITRE ATT&CK Coverage',
+    endpoints:  'Endpoints — Multi-Machine Monitor',
     ueba:       'User & Entity Behavior Analytics',
     ransomware: 'Ransomware Detection',
     vulns:      'Vulnerability Scanner',
@@ -3554,6 +3628,7 @@ function goto(page, el) {
   if (page === 'mitre')       loadMitre();
   if (page === 'threats')     loadThreats();
   if (page === 'prevention')  loadPrevention();
+  if (page === 'endpoints')   loadEndpoints();
   if (page === 'ueba')        loadUeba();
   if (page === 'ransomware')  loadRansomware();
   if (page === 'vulns')       loadVulns();
@@ -5500,6 +5575,162 @@ async function loadPlaybooks() {
 
 
 // ── UEBA ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// ENDPOINTS — Multi-Machine Monitor
+// ══════════════════════════════════════════════════════════════════════════════
+async function loadEndpoints() {
+  try {
+    // Show server IP in setup card
+    const ipEl = document.getElementById('ep-server-ip');
+    if (ipEl) ipEl.textContent = window.location.hostname || '127.0.0.1';
+
+    const r = await fetch(API + '/endpoints');
+    if (!r.ok) return;
+    const d = await r.json();
+    const summary = d.summary || {};
+    const endpoints = d.endpoints || [];
+
+    // Update KPIs
+    const s = (id, val) => { const e = document.getElementById(id); if(e) e.textContent = val; };
+    s('ep-total',   summary.total || 0);
+    s('ep-online',  summary.online || 0);
+    s('ep-offline', summary.offline || 0);
+    s('ep-alerts',  summary.total_alerts || 0);
+
+    // Nav badge
+    const nb = document.getElementById('ep-nav-badge');
+    if (nb) {
+      if (summary.critical > 0) { nb.textContent = summary.critical; nb.style.display = 'inline-block'; }
+      else nb.style.display = 'none';
+    }
+
+    const setup = document.getElementById('ep-setup-card');
+    const grid  = document.getElementById('ep-grid');
+    const cards = document.getElementById('ep-cards');
+
+    if (endpoints.length === 0) {
+      if (setup) setup.style.display = 'block';
+      if (grid)  grid.style.display = 'none';
+      return;
+    }
+
+    if (setup) setup.style.display = 'none';
+    if (grid)  grid.style.display = 'block';
+
+    const riskColor = r => ({'CRITICAL':'var(--red)','HIGH':'var(--orange)','MEDIUM':'var(--yellow)','LOW':'var(--accent)','SAFE':'var(--green)'}[r]||'var(--text3)');
+    const riskBg    = r => ({'CRITICAL':'rgba(239,68,68,.1)','HIGH':'rgba(249,115,22,.1)','MEDIUM':'rgba(234,179,8,.1)','LOW':'rgba(14,165,233,.1)','SAFE':'rgba(34,197,94,.1)'}[r]||'');
+
+    cards.innerHTML = endpoints.map(ep => `
+      <div class="card" style="cursor:pointer;transition:all .2s" onclick="showEpDetail('${ep.id}')"
+           onmouseenter="this.style.borderColor='var(--border2)'" onmouseleave="this.style.borderColor=''">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px">🖥</div>
+            <div>
+              <div style="font-size:14px;font-weight:700">${ep.hostname}</div>
+              <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">${ep.ip}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:${ep.online ? 'rgba(34,197,94,.12)' : 'rgba(71,85,105,.15)'};color:${ep.online ? 'var(--green)' : 'var(--text3)'}">
+              ${ep.online ? '● ONLINE' : '○ OFFLINE'}
+            </span>
+            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:${riskBg(ep.risk)};color:${riskColor(ep.risk)}">${ep.risk}</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+          <div style="background:var(--surface2);border-radius:8px;padding:8px;text-align:center">
+            <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:var(--accent)">${ep.cpu}%</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">CPU</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:8px;text-align:center">
+            <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:var(--violet)">${ep.ram}%</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">RAM</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:8px;text-align:center">
+            <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:${ep.alert_count > 0 ? 'var(--red)' : 'var(--green)'}">${ep.alert_count}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">Alerts</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:11px;color:var(--text3)">${ep.os || 'Windows'}</div>
+          <div style="font-size:11px;color:var(--text3)">Last seen: ${ep.last_seen_str || '—'}</div>
+        </div>
+      </div>`).join('');
+
+  } catch(e) {
+    showToast('Endpoints load failed: ' + e.message, 'error');
+  }
+}
+
+async function showEpDetail(epId) {
+  try {
+    const r = await fetch(API + '/endpoints/' + epId);
+    if (!r.ok) return;
+    const ep = await r.json();
+    const detail = document.getElementById('ep-detail');
+    const body   = document.getElementById('ep-detail-body');
+    const title  = document.getElementById('ep-detail-title');
+    if (!detail) return;
+    title.textContent = ep.hostname + ' — Full Report';
+    detail.style.display = 'block';
+    detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    const alerts = ep.alerts || [];
+    const procs  = ep.processes || [];
+    const sevColor = s => ({'CRITICAL':'var(--red)','HIGH':'var(--orange)','MEDIUM':'var(--yellow)','LOW':'var(--accent)'}[s]||'var(--text3)');
+
+    body.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px">
+        ${[['Hostname',ep.hostname],['IP Address',ep.ip],['OS',ep.os||'Windows'],['CPU',ep.cpu+'%'],['RAM',ep.ram+'%'],['Disk',ep.disk+'%']].map(([l,v])=>`
+        <div style="background:var(--surface2);border-radius:8px;padding:12px">
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${l}</div>
+          <div style="font-size:14px;font-weight:600;font-family:var(--mono)">${v}</div>
+        </div>`).join('')}
+      </div>
+      ${alerts.length > 0 ? `
+      <div style="margin-bottom:20px">
+        <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:10px">⚠ ${alerts.length} Alert(s)</div>
+        ${alerts.map(a=>`
+        <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;background:rgba(239,68,68,.1);color:${sevColor(a.severity)}">${a.severity}</span>
+            <span style="font-size:12px;font-weight:600;color:var(--text)">${a.type}</span>
+          </div>
+          <div style="font-size:12px;color:var(--text2)">${a.detail}</div>
+        </div>`).join('')}
+      </div>` : `<div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:12px;color:var(--green);font-size:13px;margin-bottom:20px">✓ No threats detected on this endpoint</div>`}
+      ${procs.length > 0 ? `
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px">Top Processes (by CPU)</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <tr style="border-bottom:1px solid var(--border)">
+          <th style="text-align:left;padding:6px 10px;color:var(--text3);font-weight:600">Process</th>
+          <th style="text-align:center;padding:6px 10px;color:var(--text3);font-weight:600">PID</th>
+          <th style="text-align:center;padding:6px 10px;color:var(--text3);font-weight:600">CPU%</th>
+          <th style="text-align:center;padding:6px 10px;color:var(--text3);font-weight:600">RAM MB</th>
+        </tr>
+        ${procs.slice(0,10).map(p=>`
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:6px 10px;font-family:var(--mono)">${p.name}</td>
+          <td style="padding:6px 10px;text-align:center;color:var(--text3)">${p.pid}</td>
+          <td style="padding:6px 10px;text-align:center;color:${p.cpu>50?'var(--red)':p.cpu>20?'var(--yellow)':'var(--text2)'}">${p.cpu}%</td>
+          <td style="padding:6px 10px;text-align:center;color:var(--text3)">${p.ram_mb}</td>
+        </tr>`).join('')}
+      </table>` : ''}
+    `;
+  } catch(e) {
+    showToast('Could not load endpoint detail', 'error');
+  }
+}
+
+function closeEpDetail() {
+  const d = document.getElementById('ep-detail');
+  if (d) d.style.display = 'none';
+}
+
+// Refresh endpoints every 20s when on that page
+setInterval(() => { if (currentPage === 'endpoints') loadEndpoints(); }, 20000);
+
 async function loadUeba() {
   const badge = document.getElementById('ueba-badge');
   if (badge) badge.textContent = 'Scanning...';
