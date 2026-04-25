@@ -11,7 +11,7 @@
 #define AgentVersion   "2.0.0"
 #define AgentPublisher "Nexora Cyber Tech"
 #define AgentExe       "NexoraGuard-Agent.exe"
-#define AgentGuid      "{B9C8D7E6-F5A4-3210-FEDC-BA9876543210}"
+#define AgentGuid      "{{B9C8D7E6-F5A4-3210-FEDC-BA9876543210}"
 
 [Setup]
 AppId={#AgentGuid}
@@ -35,9 +35,6 @@ DisableProgramGroupPage=yes
 DisableWelcomePage=no
 WizardStyle=modern
 
-; Show a clean, modern wizard
-WizardImageFile=compiler:WizModernImage-IS.bmp
-WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -58,17 +55,12 @@ Name: "{commondesktop}\{#AgentName}";  Filename: "{app}\{#AgentExe}"; IconFilena
 
 [Registry]
 ; Auto-start on boot (if task selected)
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run";
-  ValueType: string; ValueName: "NexoraGuardAgent";
-  ValueData: """{app}\{#AgentExe}"""; Tasks: startupentry
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "NexoraGuardAgent"; ValueData: """{app}\{#AgentExe}"""; Tasks: startupentry
 
 [Run]
-; Launch agent after install — will show setup wizard on first run
-Filename: "{app}\{#AgentExe}"; Description: "Launch {#AgentName}";
-  Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#AgentExe}"; Description: "Launch {#AgentName}"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
-; Kill agent before uninstall
 Filename: "taskkill.exe"; Parameters: "/f /im {#AgentExe}"; Flags: runhidden; RunOnceId: "KillAgent"
 
 [UninstallDelete]

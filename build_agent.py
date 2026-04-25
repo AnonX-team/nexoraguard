@@ -36,7 +36,7 @@ def main():
 
     # Step 1: PyInstaller
     print("\n[1/2] Building EXE with PyInstaller...")
-    run(["pyinstaller", "nexoraguard_agent.spec", "--clean", "--noconfirm"])
+    run([sys.executable, "-m", "PyInstaller", "nexoraguard_agent.spec", "--clean", "--noconfirm"])
 
     if not os.path.exists(AGENT_EXE):
         print(f"ERROR: EXE not found at {AGENT_EXE}")
