@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NexoraGuard — Product Brief</title>
+<style>
+  :root {
+    --bg:#060b18; --surface:#0c1426; --surface2:#111d33;
+    --border:#1a2d4a; --accent:#0ea5e9; --violet:#8b5cf6;
+    --green:#22c55e; --yellow:#eab308; --orange:#f97316; --red:#ef4444;
+    --text:#f1f5f9; --text2:#94a3b8; --text3:#475569;
+    --font:'Segoe UI',system-ui,sans-serif; --mono:'Courier New',monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.7; }
+
+  /* ── Page layout ── */
+  .page { max-width:960px; margin:0 auto; padding:48px 32px 80px; }
+
+  /* ── Cover ── */
+  .cover {
+    text-align:center; padding:64px 0 48px;
+    border-bottom:1px solid var(--border); margin-bottom:48px;
+  }
+  .cover-badge {
+    display:inline-block; background:rgba(14,165,233,.1);
+    border:1px solid rgba(14,165,233,.3); color:var(--accent);
+    font-size:11px; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; padding:6px 16px; border-radius:20px; margin-bottom:20px;
+  }
+  .cover h1 { font-size:48px; font-weight:800; letter-spacing:-1.5px; line-height:1.1; }
+  .cover h1 span { background:linear-gradient(135deg,var(--accent),var(--violet)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .cover p { font-size:16px; color:var(--text2); max-width:580px; margin:16px auto 0; }
+  .cover-meta { margin-top:28px; display:flex; justify-content:center; gap:24px; font-size:12px; color:var(--text3); }
+  .cover-meta span { display:flex; align-items:center; gap:6px; }
+
+  /* ── Section ── */
+  .section { margin-bottom:52px; }
+  .section-label {
+    font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+    color:var(--accent); margin-bottom:8px;
+  }
+  h2 { font-size:24px; font-weight:700; margin-bottom:20px; letter-spacing:-.3px; }
+  h3 { font-size:16px; font-weight:700; margin-bottom:10px; color:var(--text); }
+  p  { font-size:14px; color:var(--text2); margin-bottom:12px; }
+
+  /* ── Architecture diagram ── */
+  .arch {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:32px; margin:20px 0;
+    font-family:var(--mono); font-size:12px;
+  }
+  .arch-row { display:flex; align-items:stretch; gap:0; margin-bottom:0; }
+  .arch-layer {
+    flex:1; border-radius:10px; padding:14px 16px; text-align:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    min-height:72px;
+  }
+  .arch-layer .layer-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+  .arch-layer .layer-desc  { font-size:10px; opacity:.75; }
+  .arch-arrow { display:flex; align-items:center; justify-content:center; padding:0 8px; color:var(--text3); font-size:18px; flex-shrink:0; }
+  .arch-arrow-down { text-align:center; color:var(--text3); font-size:20px; margin:8px 0; }
+
+  .layer-edr    { background:rgba(14,165,233,.1);  border:1px solid rgba(14,165,233,.25);  color:var(--accent); }
+  .layer-ndr    { background:rgba(234,179,8,.1);   border:1px solid rgba(234,179,8,.25);   color:var(--yellow); }
+  .layer-xdr    { background:rgba(139,92,246,.15); border:1px solid rgba(139,92,246,.3);   color:var(--violet); }
+  .layer-ai     { background:rgba(34,197,94,.1);   border:1px solid rgba(34,197,94,.25);   color:var(--green); }
+  .layer-resp   { background:rgba(239,68,68,.1);   border:1px solid rgba(239,68,68,.25);   color:var(--red); }
+  .layer-dash   { background:rgba(249,115,22,.1);  border:1px solid rgba(249,115,22,.25);  color:var(--orange); }
+
+  /* ── Feature grid ── */
+  .feat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:20px 0; }
+  .feat-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:18px;
+  }
+  .feat-icon  { font-size:22px; margin-bottom:8px; }
+  .feat-title { font-size:13px; font-weight:700; margin-bottom:4px; }
+  .feat-desc  { font-size:11px; color:var(--text3); line-height:1.6; }
+
+  /* ── Market comparison table ── */
+  .compare-table { width:100%; border-collapse:collapse; font-size:12px; margin:20px 0; }
+  .compare-table th {
+    padding:10px 14px; background:var(--surface2); color:var(--text3);
+    font-size:10px; text-transform:uppercase; letter-spacing:.8px;
+    border-bottom:1px solid var(--border); text-align:left;
+  }
+  .compare-table td { padding:11px 14px; border-bottom:1px solid rgba(26,45,74,.4); }
+  .compare-table tr:last-child td { border-bottom:none; }
+  .compare-table tr:hover td { background:rgba(14,165,233,.03); }
+  .check { color:var(--green); font-weight:700; }
+  .cross { color:var(--red); }
+  .partial { color:var(--yellow); }
+  .hl { color:var(--accent); font-weight:700; }
+
+  /* ── User personas ── */
+  .persona-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:20px 0; }
+  .persona {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:20px; display:flex; gap:14px;
+  }
+  .persona-avatar {
+    width:44px; height:44px; border-radius:11px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:20px;
+  }
+  .persona-name  { font-size:13px; font-weight:700; margin-bottom:3px; }
+  .persona-role  { font-size:11px; color:var(--accent); margin-bottom:6px; }
+  .persona-pain  { font-size:11px; color:var(--text3); line-height:1.6; }
+
+  /* ── Kill chain flow ── */
+  .kc-flow { display:flex; flex-wrap:wrap; gap:6px; margin:16px 0; align-items:center; }
+  .kc-stage {
+    padding:6px 12px; border-radius:20px; font-size:11px; font-weight:600;
+    border:1px solid; display:flex; align-items:center; gap:5px;
+  }
+  .kc-arrow { color:var(--text3); font-size:14px; }
+
+  /* ── Callout ── */
+  .callout {
+    border-left:3px solid; border-radius:0 10px 10px 0;
+    padding:14px 18px; margin:16px 0; font-size:13px;
+  }
+  .callout-blue   { border-color:var(--accent); background:rgba(14,165,233,.06); color:var(--text2); }
+  .callout-green  { border-color:var(--green);  background:rgba(34,197,94,.06);  color:var(--text2); }
+  .callout-orange { border-color:var(--orange); background:rgba(249,115,22,.06); color:var(--text2); }
+  .callout-violet { border-color:var(--violet); background:rgba(139,92,246,.06); color:var(--text2); }
+  .callout strong { color:var(--text); }
+
+  /* ── Stat row ── */
+  .stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:20px 0; }
+  .stat-box {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:16px; text-align:center;
+  }
+  .stat-num   { font-size:32px; font-weight:800; font-family:var(--mono); line-height:1; }
+  .stat-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.6px; margin-top:4px; }
+
+  /* ── Badge ── */
+  .badge { display:inline-block; font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; }
+  .badge-free { background:rgba(34,197,94,.15); color:var(--green); border:1px solid rgba(34,197,94,.2); }
+  .badge-paid { background:rgba(239,68,68,.12); color:#f87171; border:1px solid rgba(239,68,68,.2); }
+  .badge-new  { background:rgba(139,92,246,.15); color:var(--violet); border:1px solid rgba(139,92,246,.2); }
+
+  /* ── Divider ── */
+  .divider { border:none; border-top:1px solid var(--border); margin:40px 0; }
+
+  /* ── Footer ── */
+  .footer { text-align:center; padding:32px 0 0; border-top:1px solid var(--border); color:var(--text3); font-size:11px; }
+  .footer strong { color:var(--text2); }
+
+  @media print {
+    body { background:#fff; color:#111; }
+    .cover h1 span { -webkit-text-fill-color: #0369a1; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── COVER ──────────────────────────────────────────────────────────────── -->
+  <div class="cover">
+    <div class="cover-badge">Product Brief — Confidential</div>
+    <h1>Nexora<span>Guard</span></h1>
+    <p>Windows XDR Platform — Unified Endpoint + Network Detection with AI-Driven Response</p>
+    <div class="cover-meta">
+      <span>📅 2026</span>
+      <span>🏢 Nexora Cyber Tech</span>
+      <span>🖥 Windows 10/11</span>
+      <span>🔒 Personal &amp; SMB</span>
+    </div>
+  </div>
+
+
+  <!-- ── 1. WHAT IS NEXORAGUARD ─────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">01 — Overview</div>
+    <h2>NexoraGuard kya hai?</h2>
+
+    <p>
+      NexoraGuard ek <strong style="color:var(--accent)">all-in-one Windows security platform</strong> hai jo ek hi
+      deployment mein woh sab karta hai jo alag alag tools mein distribute hota tha —
+      EDR (Endpoint Detection), NDR (Network Detection), SIEM (Log Analysis), UEBA (User Behavior),
+      XDR (Correlated Incidents), aur Automated Response.
+    </p>
+
+    <div class="callout callout-violet">
+      <strong>Market gap:</strong> Enterprise XDR tools (CrowdStrike, SentinelOne) ki cost $80–185/endpoint/year hai
+      aur inhe IT teams, cloud infra, aur dedicated servers chahiye hote hain.
+      Freelancers, students, small businesses, aur solo developers ke liye koi option nahi tha —
+      jab tak NexoraGuard nahi aaya.
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num" style="color:var(--accent)">7</div>
+        <div class="stat-label">Detection Layers</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" style="color:var(--violet)">50+</div>
+        <div class="stat-label">Detection Rules</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" style="color:var(--green)">12</div>
+        <div class="stat-label">Auto Playbooks</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" style="color:var(--orange)">15</div>
+        <div class="stat-label">DDoS Protocols</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── 2. ARCHITECTURE DIAGRAM ────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">02 — Architecture</div>
+    <h2>System Architecture</h2>
+
+    <div class="arch">
+      <!-- Row 1: Data Sources -->
+      <p style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;text-align:center">DATA COLLECTION LAYER</p>
+      <div class="arch-row">
+        <div class="arch-layer layer-edr">
+          <span style="font-size:20px">🖥</span>
+          <div class="layer-title">Endpoint (EDR)</div>
+          <div class="layer-desc">Processes · Files · Registry<br>Login Events · USB · Services</div>
+        </div>
+        <div class="arch-arrow">+</div>
+        <div class="arch-layer layer-ndr">
+          <span style="font-size:20px">🌐</span>
+          <div class="layer-title">Network (NDR)</div>
+          <div class="layer-desc">Connections · DDoS · Port Scan<br>Amplification · Flood · C2</div>
+        </div>
+        <div class="arch-arrow">+</div>
+        <div class="arch-layer" style="background:rgba(71,85,105,.15);border:1px solid var(--border);color:var(--text2)">
+          <span style="font-size:20px">📋</span>
+          <div class="layer-title">Windows Logs</div>
+          <div class="layer-desc">Security · System · App<br>Event IDs: 4624, 4625, 4672…</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow-down">↓</div>
+
+      <!-- Row 2: Detection engines -->
+      <p style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;text-align:center">DETECTION ENGINE LAYER</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
+        <div class="arch-layer layer-edr" style="min-height:60px">
+          <div class="layer-title" style="font-size:10px">Rules Engine</div>
+          <div class="layer-desc" style="font-size:9px">50+ detection rules<br>MITRE ATT&CK mapped</div>
+        </div>
+        <div class="arch-layer layer-ndr" style="min-height:60px">
+          <div class="layer-title" style="font-size:10px">DDoS Detector</div>
+          <div class="layer-desc" style="font-size:9px">15 protocols<br>20+ ML features</div>
+        </div>
+        <div class="arch-layer" style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.25);color:var(--orange);min-height:60px">
+          <div class="layer-title" style="font-size:10px">UEBA Engine</div>
+          <div class="layer-desc" style="font-size:9px">Behavioral baselines<br>Anomaly detection</div>
+        </div>
+        <div class="arch-layer layer-resp" style="min-height:60px">
+          <div class="layer-title" style="font-size:10px">Ransomware</div>
+          <div class="layer-desc" style="font-size:9px">File entropy analysis<br>60+ extensions</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <div class="arch-layer layer-ai" style="min-height:60px">
+          <div class="layer-title" style="font-size:10px">Lateral Movement</div>
+          <div class="layer-desc" style="font-size:9px">RDP · SMB · WinRM · PtH</div>
+        </div>
+        <div class="arch-layer" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:var(--violet);min-height:60px">
+          <div class="layer-title" style="font-size:10px">Threat Intel Feed</div>
+          <div class="layer-desc" style="font-size:9px">MalwareBazaar · URLhaus<br>GreyNoise · VirusTotal</div>
+        </div>
+        <div class="arch-layer layer-ndr" style="min-height:60px">
+          <div class="layer-title" style="font-size:10px">Vuln Scanner</div>
+          <div class="layer-desc" style="font-size:9px">EOL software · Patch gaps<br>CISA KEV reference</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow-down">↓</div>
+
+      <!-- Row 3: XDR Correlation -->
+      <p style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;text-align:center">XDR CORRELATION LAYER</p>
+      <div class="arch-row">
+        <div class="arch-layer layer-xdr" style="min-height:80px">
+          <span style="font-size:20px">⬡</span>
+          <div class="layer-title">XDR Engine</div>
+          <div class="layer-desc">EDR + NDR alerts correlate karta hai<br>ek hi attacker entity pe — 5-min window</div>
+        </div>
+        <div class="arch-arrow">+</div>
+        <div class="arch-layer layer-xdr" style="min-height:80px">
+          <span style="font-size:20px">⛓</span>
+          <div class="layer-title">Kill Chain Tracker</div>
+          <div class="layer-desc">Current ATT&CK stage detect karta hai<br>aur next attacker move predict karta hai</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow-down">↓</div>
+
+      <!-- Row 4: Response -->
+      <p style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;text-align:center">AUTOMATED RESPONSE LAYER</p>
+      <div class="arch-row">
+        <div class="arch-layer layer-resp">
+          <span style="font-size:20px">⚡</span>
+          <div class="layer-title">Playbook Engine</div>
+          <div class="layer-desc">12 response playbooks — IP block, isolation,<br>process kill, forensic capture</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-layer layer-ai">
+          <span style="font-size:20px">🤖</span>
+          <div class="layer-title">AI Agent (Groq/LLaMA)</div>
+          <div class="layer-desc">Natural language threat explanation<br>aur remediation guidance</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-layer layer-dash">
+          <span style="font-size:20px">📊</span>
+          <div class="layer-title">Dashboard + Alerts</div>
+          <div class="layer-desc">Real-time SPA dashboard<br>Email / desktop notifications</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── 3. WHAT IT DOES ────────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">03 — Capabilities</div>
+    <h2>Kya kya kaam karta hai?</h2>
+
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🖥</div>
+        <div class="feat-title" style="color:var(--accent)">EDR — Endpoint Detection</div>
+        <div class="feat-desc">
+          Processes, registry startup items, file changes, USB devices, brute force logins,
+          privilege escalation, PowerShell abuse, suspicious process spawns, LOLBin detection,
+          process injection, new accounts, scheduled tasks, services.
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌐</div>
+        <div class="feat-title" style="color:var(--yellow)">NDR — Network Detection</div>
+        <div class="feat-desc">
+          15 DDoS protocols (TCP SYN, UDP, DNS/NTP/Memcached amplification,
+          HTTP Flood, Slowloris, Carpet Bombing, IoT Botnet).
+          Port scanning, suspicious outbound ports, 20+ ML features (entropy, SYN ratio).
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🧠</div>
+        <div class="feat-title" style="color:var(--orange)">UEBA — Behavior Analytics</div>
+        <div class="feat-desc">
+          Off-hours login detection, new source IP alerts, credential stuffing,
+          password spray, account enumeration, privilege anomalies, rare process execution.
+          Rolling behavioral baselines.
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔴</div>
+        <div class="feat-title" style="color:var(--red)">Ransomware Detection</div>
+        <div class="feat-desc">
+          Mass file modification (>30 in 60s), Shannon entropy analysis (>7.2 bits),
+          60+ ransom extension scan, ransom note detection (20+ filenames),
+          shadow copy deletion (vssadmin/bcdedit), LockBit/Conti/BlackCat signatures.
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">↔</div>
+        <div class="feat-title" style="color:var(--yellow)">Lateral Movement</div>
+        <div class="feat-desc">
+          RDP from external IPs, new-source RDP logins, SMB spread to 5+ hosts,
+          ADMIN$/C$ share access, WinRM external connections,
+          Pass-the-Hash (NTLM), remote service installation (T1570).
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title" style="color:var(--green)">Vulnerability Scanner</div>
+        <div class="feat-desc">
+          Windows patch gap detection, EOL software registry scan (20+ software),
+          CISA KEV reference (10 active CVEs: Zerologon, PrintNightmare, etc.),
+          weak config checks (RemoteRegistry, WinRM, ADMIN$).
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⬡</div>
+        <div class="feat-title" style="color:var(--violet)">XDR Incident Correlation</div>
+        <div class="feat-desc">
+          EDR + NDR alerts ek hi incident mein group karta hai — shared IP/user aur 5-min window.
+          Cross-sensor incidents (endpoint + network dono) ko high confidence deta hai.
+          Attacker entity tracking.
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⛓</div>
+        <div class="feat-title" style="color:var(--orange)">Kill Chain Prediction</div>
+        <div class="feat-desc">
+          12 ATT&CK stages track karta hai. Jo stage abhi active hai usse dekh ke
+          NEXT likely stage predict karta hai. Specific T-numbers batata hai
+          jo attacker likely use karega. Dwell time measure karta hai.
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title" style="color:var(--red)">Automated Playbooks</div>
+        <div class="feat-desc">
+          12 pre-built response scenarios: ransomware → auto-isolate,
+          brute force + login → auto block IP, DDoS → firewall rules,
+          lateral movement → block + alert. Manual recommendations bhi milti hain.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── 4. KILL CHAIN FLOW ─────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">04 — Attack Tracking</div>
+    <h2>Kill Chain Tracking — Attacker ko Track karo Step by Step</h2>
+
+    <p>NexoraGuard MITRE ATT&CK Enterprise kill chain ke har stage ko monitor karta hai. Jab attacker ek stage complete karta hai, system agla stage predict karta hai:</p>
+
+    <div class="kc-flow">
+      <div class="kc-stage" style="background:rgba(249,115,22,.15);border-color:var(--orange);color:var(--orange)">TA0001 Initial Access</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red)">TA0002 Execution</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(139,92,246,.1);border-color:var(--violet);color:var(--violet)">TA0003 Persistence</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(236,72,153,.1);border-color:#ec4899;color:#ec4899">TA0004 Priv. Esc.</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(99,102,241,.1);border-color:#6366f1;color:#6366f1">TA0005 Def. Evasion</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(14,165,233,.1);border-color:var(--accent);color:var(--accent)">TA0006 Cred. Access</div>
+    </div>
+    <div class="kc-flow" style="margin-top:4px">
+      <div class="kc-stage" style="background:rgba(34,197,94,.1);border-color:var(--green);color:var(--green)">TA0007 Discovery</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(234,179,8,.15);border-color:var(--yellow);color:var(--yellow)">TA0008 Lateral Movement</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(20,184,166,.1);border-color:#14b8a6;color:#14b8a6">TA0009 Collection</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red)">TA0011 C2</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(249,115,22,.1);border-color:var(--orange);color:var(--orange)">TA0010 Exfiltration</div>
+      <div class="kc-arrow">→</div>
+      <div class="kc-stage" style="background:rgba(220,38,38,.2);border-color:#dc2626;color:#dc2626">TA0040 Impact 🔴</div>
+    </div>
+
+    <div class="callout callout-orange" style="margin-top:20px">
+      <strong>Example:</strong> Agar NexoraGuard detect kare ke attacker "Lateral Movement" stage pe hai
+      (SMB spread + RDP external alert) — to system predict karega:
+      <em>"Next likely: Collection (T1560) aur Command &amp; Control (T1071) — watch for archive creation aur outbound HTTPS/DNS"</em>
+    </div>
+  </div>
+
+
+  <!-- ── 5. MARKET POSITION ─────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">05 — Market Position</div>
+    <h2>Market mein NexoraGuard ka position</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th style="color:var(--accent)">NexoraGuard</th>
+          <th>CrowdStrike XDR</th>
+          <th>SentinelOne</th>
+          <th>Wazuh (free)</th>
+          <th>Windows Defender</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Price</td>
+          <td class="hl">Free / Low Cost</td>
+          <td class="cross">$185/yr/device</td>
+          <td class="cross">$70–230/yr</td>
+          <td class="check">Free</td>
+          <td class="check">Built-in</td>
+        </tr>
+        <tr>
+          <td>Single machine install</td>
+          <td class="check">✓</td>
+          <td class="cross">✗ min 5</td>
+          <td class="cross">✗ min 5</td>
+          <td class="partial">⚠ needs server</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>No cloud / no internet needed</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="partial">⚠</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>EDR (Endpoint Detection)</td>
+          <td class="check">✓ 50+ rules</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="partial">⚠ basic</td>
+          <td class="partial">⚠ limited</td>
+        </tr>
+        <tr>
+          <td>NDR (Network Detection)</td>
+          <td class="check">✓ 15 protocols</td>
+          <td class="check">✓</td>
+          <td class="partial">⚠</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>XDR Correlation (EDR+NDR)</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>Kill Chain Prediction</td>
+          <td class="check">✓</td>
+          <td class="partial">⚠ partial</td>
+          <td class="partial">⚠ partial</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>UEBA (User Behavior)</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>Ransomware Detection</td>
+          <td class="check">✓ behavioral</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="partial">⚠ basic</td>
+        </tr>
+        <tr>
+          <td>Automated Response Playbooks</td>
+          <td class="check">✓ 12 built-in</td>
+          <td class="check">✓ SOAR</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>MITRE ATT&CK Mapping</td>
+          <td class="check">✓ full</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="partial">⚠</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>AI Chat (LLM-powered)</td>
+          <td class="check">✓ Groq/LLaMA</td>
+          <td class="partial">⚠ enterprise</td>
+          <td class="partial">⚠ enterprise</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>Setup time</td>
+          <td class="check">~2 minutes</td>
+          <td class="cross">Days + IT team</td>
+          <td class="cross">Hours + IT</td>
+          <td class="cross">Hours + Linux server</td>
+          <td class="check">Built-in</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-green">
+      <strong>Sweet spot:</strong> NexoraGuard woh jagah fill karta hai jo CrowdStrike/SentinelOne ne ignore ki —
+      <strong>single-machine, no-infra, full XDR</strong> for individuals and small teams.
+      Wazuh free hai lekin usay Linux server, Elasticsearch, aur dedicated IT team chahiye.
+      NexoraGuard ek .exe install karo aur chalao.
+    </div>
+  </div>
+
+
+  <!-- ── 6. TARGET USERS ────────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">06 — Target Users</div>
+    <h2>Kiske liye best hai?</h2>
+
+    <div class="persona-grid">
+      <div class="persona">
+        <div class="persona-avatar" style="background:rgba(14,165,233,.15)">👨‍💻</div>
+        <div>
+          <div class="persona-name">Security Student / Researcher</div>
+          <div class="persona-role">Computer Science / Cybersecurity Students</div>
+          <div class="persona-pain">
+            Real-world tools sikhna chahte hain — MITRE ATT&CK, XDR, UEBA — lekin enterprise tools
+            afford nahi kar sakte. NexoraGuard unke Windows laptop pe real detections chalata hai
+            aur practically sikhata hai ke attack kaise hota hai aur kaise rokein.
+          </div>
+        </div>
+      </div>
+
+      <div class="persona">
+        <div class="persona-avatar" style="background:rgba(139,92,246,.15)">🧑‍🔬</div>
+        <div>
+          <div class="persona-name">CTF Player / Penetration Tester</div>
+          <div class="persona-role">Ethical Hackers, Bug Bounty Hunters</div>
+          <div class="persona-pain">
+            Apni test machine pe attack simulate karte hain aur dekhna chahte hain ke defender kya
+            detect karta hai. NexoraGuard unhe dono perspectives deta hai — attacker ka aur
+            defender ka. Kill chain visualization CTF practice mein directly useful hai.
+          </div>
+        </div>
+      </div>
+
+      <div class="persona">
+        <div class="persona-avatar" style="background:rgba(34,197,94,.15)">🏢</div>
+        <div>
+          <div class="persona-name">Small Business Owner / IT Admin</div>
+          <div class="persona-role">SMB with 1–50 employees, No dedicated SOC</div>
+          <div class="persona-pain">
+            CrowdStrike ke liye budget nahi, Wazuh setup karne ke liye time nahi.
+            Employees ke laptops pe ransomware ka dar, phishing ka dar.
+            NexoraGuard ek install mein lagata hai aur alerts deta hai — koi training, koi server nahi.
+          </div>
+        </div>
+      </div>
+
+      <div class="persona">
+        <div class="persona-avatar" style="background:rgba(249,115,22,.15)">💻</div>
+        <div>
+          <div class="persona-name">Freelancer / Remote Worker</div>
+          <div class="persona-role">Developers, Designers, Consultants</div>
+          <div class="persona-pain">
+            Client data apne laptop pe rakhte hain. Public WiFi use karte hain.
+            Koi IT department nahi jo unhe protect kare. NexoraGuard unka personal SOC
+            ban jata hai — background mein chalta rehta hai, koi action ki zaroorat nahi.
+          </div>
+        </div>
+      </div>
+
+      <div class="persona">
+        <div class="persona-avatar" style="background:rgba(239,68,68,.15)">🎓</div>
+        <div>
+          <div class="persona-name">CS / Cybersecurity Portfolio Builder</div>
+          <div class="persona-role">Final Year Project, Job Seekers</div>
+          <div class="persona-pain">
+            Resume pe "XDR, MITRE, UEBA, Ransomware Detection, Kill Chain Prediction"
+            likhna chahte hain aur practically demonstrate kar saken.
+            NexoraGuard ek complete production-quality project hai portfolio ke liye.
+          </div>
+        </div>
+      </div>
+
+      <div class="persona">
+        <div class="persona-avatar" style="background:rgba(20,184,166,.15)">🔒</div>
+        <div>
+          <div class="persona-name">Privacy-Conscious Power User</div>
+          <div class="persona-role">Tech-savvy individuals, Journalists, Activists</div>
+          <div class="persona-pain">
+            Apna data kisi cloud service ko nahi dena chahte. NexoraGuard
+            100% local hai — koi telemetry nahi, koi data upload nahi.
+            Sab kuch apne machine pe process hota hai. Offline bhi kaam karta hai.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── 7. REAL-WORLD USE CASES ────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">07 — Use Cases</div>
+    <h2>Real-World Scenarios</h2>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="font-size:20px">🔴</span>
+          <div>
+            <div style="font-size:13px;font-weight:700">Ransomware Attack — Employee Laptop</div>
+            <div style="font-size:11px;color:var(--text3)">Scenario: LockBit phishing email se laptop pe ata hai</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8">
+          <strong style="color:var(--green)">NexoraGuard response:</strong>
+          1) UEBA: unfamiliar executable run detect karta hai →
+          2) Ransomware: mass file modification + .lockbit extension scan →
+          3) Kill chain: Impact stage active →
+          4) <strong style="color:var(--red)">PB-01 auto-triggers: Network isolate + forensic snapshot + critical alert</strong> →
+          5) Recovery tip display: "vssadmin list shadows, do NOT reboot"
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="font-size:20px">↔</span>
+          <div>
+            <div style="font-size:13px;font-weight:700">Insider Threat — Lateral Movement</div>
+            <div style="font-size:11px;color:var(--text3)">Scenario: Compromised account RDP se spread kar raha hai</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8">
+          <strong style="color:var(--green)">NexoraGuard response:</strong>
+          1) Lateral Movement: RDP new source alert →
+          2) UEBA: off-hours login for admin account →
+          3) XDR: dono alerts ek incident mein correlate →
+          4) Kill chain: Credential Access → Lateral Movement stage progression detect →
+          5) <strong style="color:var(--orange)">Predict: "Next move: Collection (T1560) ya C2 (T1071)"</strong> →
+          6) PB-03: IP block + alert
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="font-size:20px">🌊</span>
+          <div>
+            <div style="font-size:13px;font-weight:700">DDoS Attack — Small Business Server</div>
+            <div style="font-size:11px;color:var(--text3)">Scenario: Competitor ya script kiddie HTTP flood</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8">
+          <strong style="color:var(--green)">NexoraGuard response:</strong>
+          1) NDR: HTTP Flood + high src_ip entropy detect →
+          2) Prevention: netsh SYN cookie enable recommendation →
+          3) <strong style="color:var(--yellow)">PB-09: Top attacker IPs auto-block via Windows Firewall</strong> →
+          4) 15-protocol coverage table mein mitigation steps show
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ── 8. VALUE PROPOSITION ───────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">08 — Value Proposition</div>
+    <h2>Kyu choose karein NexoraGuard?</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="callout callout-blue">
+        <strong>🖥 Ek install — sab kuch</strong><br>
+        EDR + NDR + XDR + UEBA + Ransomware + Lateral Movement + Vuln Scanner + AI Agent
+        ek single .exe mein. Koi server nahi, koi cloud nahi, koi configuration nahi.
+      </div>
+      <div class="callout callout-violet">
+        <strong>⛓ Kill chain prediction</strong><br>
+        Sirf detect nahi karta — attacker ka NEXT MOVE predict karta hai.
+        Ye feature enterprise XDR mein bhi partial hai, NexoraGuard mein fully built-in hai.
+      </div>
+      <div class="callout callout-green">
+        <strong>⚡ Automated response</strong><br>
+        Ransomware detect hote hi auto-isolate. Brute force + login = IP auto-block.
+        DDoS = firewall rules auto-apply. Security team ki zaroorat nahi.
+      </div>
+      <div class="callout callout-orange">
+        <strong>🤖 AI-powered explanations</strong><br>
+        Alert aane pe "kya hua aur kya karna chahiye" natural language mein batata hai.
+        Security knowledge ke bina bhi use kar sakte hain.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── 9. TECH STACK ──────────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">09 — Technical Stack</div>
+    <h2>Technology</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Backend</div>
+        <div style="font-size:12px;color:var(--text2);line-height:2">
+          Python 3.14<br>FastAPI + Uvicorn<br>psutil (process/network)<br>winreg (Windows registry)<br>Windows Event Log API<br>Shannon entropy (file analysis)
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Frontend</div>
+        <div style="font-size:12px;color:var(--text2);line-height:2">
+          HTML5 SPA (no framework)<br>Chart.js (visualizations)<br>WebSocket (live data)<br>CSS custom properties<br>JetBrains Mono font<br>Fully responsive
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">AI + Intel</div>
+        <div style="font-size:12px;color:var(--text2);line-height:2">
+          Groq API (LLaMA 3)<br>MalwareBazaar (free)<br>URLhaus (free)<br>GreyNoise Community<br>VirusTotal (user key)<br>MITRE ATT&CK Enterprise
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+  <div class="footer">
+    <strong>NexoraGuard</strong> — Nexora Cyber Tech © 2026<br>
+    <span style="margin-top:6px;display:block">
+      Windows XDR Platform | Personal &amp; SMB Security | Made in Pakistan 🇵🇰
+    </span>
+    <span style="margin-top:4px;display:block">
+      WhatsApp: +92 342 4217045 &nbsp;|&nbsp; Authorized security monitoring only
+    </span>
+  </div>
+
+</div>
+</body>
+</html>

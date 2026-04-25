@@ -1,0 +1,55 @@
+# NexoraGuard — Python dependencies
+# Install with: pip install -r requirements.txt
+# NOTE: Python 3.14 required. Run as Administrator for pywin32 post-install.
+#   After installing: python -m pywin32_postinstall -install
+
+# ── Web framework ─────────────────────────────────────────────────────────────
+fastapi==0.115.0
+uvicorn[standard]==0.30.6          # includes websockets, httptools
+pydantic==2.9.0
+
+# ── AI / LLM ─────────────────────────────────────────────────────────────────
+groq==0.11.0                       # Free LLaMA 3.3-70b inference
+
+# ── System monitoring ─────────────────────────────────────────────────────────
+psutil==6.0.0                      # CPU, RAM, disk, process, network stats
+
+# ── Windows-specific ─────────────────────────────────────────────────────────
+pywin32==306                       # Windows Service + Registry (winreg)
+pywin32-ctypes==0.2.2              # Required by PyInstaller for pywin32
+
+# ── HTTP / networking ─────────────────────────────────────────────────────────
+requests==2.32.3                   # HTTP client (error reporter)
+websockets==12.0                   # WebSocket support for /ws endpoint
+
+# ── Cryptography ─────────────────────────────────────────────────────────────
+cryptography==43.0.0               # Encrypt license/keys at rest
+
+# ── Authentication ────────────────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0   # JWT token generation and validation
+# Password hashing: stdlib hashlib.pbkdf2_hmac (no extra dependency)
+
+# ── Configuration ─────────────────────────────────────────────────────────────
+python-dotenv==1.0.1
+
+# ── Async runtime ─────────────────────────────────────────────────────────────
+anyio==4.4.0
+sniffio==1.3.1
+aiofiles==25.1.0                   # Async file I/O (FastAPI static files)
+
+# ── Desktop window ────────────────────────────────────────────────────────────
+pywebview==6.1                     # Edge WebView2 window on Windows (Python 3.14 compatible)
+pythonnet==3.0.3                   # PythonNet — clr module, required by pywebview WinForms backend
+                                   # NOTE: pip may show only 2.5.2 in index. Force with:
+                                   #   pip install pythonnet==3.0.3
+
+# ── System tray + icon ────────────────────────────────────────────────────────
+pystray==0.19.5                    # System tray icon
+Pillow>=10.0.0                     # PIL — tray image rendering
+
+# ── Notifications ─────────────────────────────────────────────────────────────
+plyer==2.1.0                       # Cross-platform desktop notifications
+
+# ── Report generation ─────────────────────────────────────────────────────────
+fpdf2==2.8.1                       # PDF report generation (NexoraGuard Security Reports)
+openpyxl==3.1.5                    # Excel (.xlsx) report generation

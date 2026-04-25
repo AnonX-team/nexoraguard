@@ -1,0 +1,14 @@
+// NexoraGuard Xcode Build Configuration
+// Use this config when creating the Xcode project manually.
+
+PRODUCT_NAME = NexoraGuard
+PRODUCT_BUNDLE_IDENTIFIER = com.nexora.securityagent
+MARKETING_VERSION = 2.0.0
+CURRENT_PROJECT_VERSION = 2
+
+SWIFT_VERSION = 5.9
+IPHONEOS_DEPLOYMENT_TARGET = 16.0
+
+// Code signing — set your Team ID here
+DEVELOPMENT_TEAM =
+CODE_SIGN_STYLE = Automatic

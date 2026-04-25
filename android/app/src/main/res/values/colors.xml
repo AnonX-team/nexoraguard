@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_dark">#0D0D0D</color>
+    <color name="bg_card">#1A1A2E</color>
+    <color name="bg_card2">#111111</color>
+    <color name="accent_cyan">#00E5FF</color>
+    <color name="accent_cyan_dark">#00B0CC</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#888888</color>
+    <color name="risk_critical">#D32F2F</color>
+    <color name="risk_high">#F57C00</color>
+    <color name="risk_medium">#FBC02D</color>
+    <color name="risk_low">#388E3C</color>
+    <color name="risk_unknown">#1976D2</color>
+    <color name="divider">#2A2A2A</color>
+    <color name="user_bubble">#00B0CC</color>
+    <color name="agent_bubble">#1A1A2E</color>
+    <color name="nav_selected">#00E5FF</color>
+    <color name="nav_unselected">#666666</color>
+</resources>

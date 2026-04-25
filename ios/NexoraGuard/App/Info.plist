@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDisplayName</key>
+    <string>NexoraGuard</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.nexora.securityagent</string>
+
+    <key>CFBundleName</key>
+    <string>NexoraGuard</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>2.0.0</string>
+
+    <key>CFBundleVersion</key>
+    <string>2</string>
+
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+
+    <key>UILaunchScreen</key>
+    <dict/>
+
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+        <key>UIApplicationSupportsMultipleScenes</key>
+        <false/>
+    </dict>
+
+    <!-- Allow HTTP to local network IPs (backend is HTTP not HTTPS) -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+
+    <!-- Notifications -->
+    <key>NSUserNotificationsUsageDescription</key>
+    <string>NexoraGuard notifies you when HIGH or CRITICAL security threats are detected on your monitored system.</string>
+
+    <!-- Local network (for finding the backend server) -->
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>NexoraGuard connects to the NexoraGuard backend server on your local network.</string>
+
+    <!-- Supported orientations -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+
+    <key>UIRequiresFullScreen</key>
+    <false/>
+</dict>
+</plist>

@@ -1,0 +1,52 @@
+# ── Environment & Secrets ─────────────────────────────────────────────────────
+.env
+*.key
+*.pfx
+*.pem
+*.p12
+
+# ── Auth & License (auto-generated at runtime) ────────────────────────────────
+backend/auth_credentials.json
+backend/auth_secret.key
+backend/license.txt
+license.txt
+user_config.json
+
+# ── Runtime data ──────────────────────────────────────────────────────────────
+backend/alerts.log
+backend/file_baseline.json
+*.log
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.Python
+
+# ── PyInstaller build output ──────────────────────────────────────────────────
+*.spec
+_internal/
+*.exe
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.suo
+*.user
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+
+# ── Temp ──────────────────────────────────────────────────────────────────────
+*.tmp
+*.bak
+*.swp

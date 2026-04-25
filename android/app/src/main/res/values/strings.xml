@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NexoraGuard</string>
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_chat">AI Chat</string>
+    <string name="nav_alerts">Alerts</string>
+    <string name="nav_network">Network</string>
+    <string name="nav_settings">Settings</string>
+    <string name="channel_threats">Threat Alerts</string>
+    <string name="channel_threats_desc">Real-time security threat notifications</string>
+</resources>
